@@ -11,18 +11,21 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Acme.BookStore.Books
 {
-    [Authorize(BookStorePermissions.Authors.Default)]
+   //[Authorize(BookStorePermissions.Authors.Default)]
     public class AuthorAppService : BookStoreAppService, IAuthorAppService
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly AuthorManager _authorManager;
+        private readonly IRepository<Book, Guid> _bookRepository;
 
         public AuthorAppService(
             IAuthorRepository authorRepository,
-            AuthorManager authorManager)
+            AuthorManager authorManager,
+              IRepository<Book, Guid> bookRepository)
         {
             _authorRepository = authorRepository;
             _authorManager = authorManager;
+            _bookRepository = bookRepository;
         }
 
         public async Task<AuthorDto> GetAsync(Guid id)
@@ -54,7 +57,7 @@ namespace Acme.BookStore.Books
                 ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors)
             );
         }
-        [Authorize(BookStorePermissions.Authors.Create)]
+  //      [Authorize(BookStorePermissions.Authors.Create)]
         public async Task<AuthorDto> CreateAsync(CreateAuthorDto input)
         {
             var author = await _authorManager.CreateAsync(
@@ -86,6 +89,33 @@ namespace Acme.BookStore.Books
         public async Task DeleteAsync(Guid id)
         {
             await _authorRepository.DeleteAsync(id);
+       }
+//        [Authorize(BookStorePermissions.Authors.Create)]
+        public async Task<AuthorDto> CreateAuthorWithBooksAsync(AuthorWithManyBooksDto authorWithManyBooksDto)
+        {
+            var author = await _authorManager.CreateAsync(
+                authorWithManyBooksDto.Name,
+                authorWithManyBooksDto.BirthDate,
+                authorWithManyBooksDto.ShortBio
+            );
+
+            await _authorRepository.InsertAsync(author);
+
+            foreach (var bookInput in authorWithManyBooksDto.Books)
+            {
+                var book = new Book
+                {
+                    Name = bookInput.Name,
+                    Type = bookInput.Type,
+                    PublishDate = bookInput.PublishDate,
+                    Price = bookInput.Price,
+                    AuthorId = author.Id
+                };
+
+                await _bookRepository.InsertAsync(book);
+            }
+
+            return ObjectMapper.Map<Author, AuthorDto>(author);
         }
     }
 }

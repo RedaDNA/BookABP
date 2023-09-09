@@ -30,7 +30,7 @@ namespace Acme.BookStore.Books
             _authorRepository = authorRepository;
             GetPolicyName = BookStorePermissions.Books.Default;
             GetListPolicyName = BookStorePermissions.Books.Default;
-            CreatePolicyName = BookStorePermissions.Books.Create;
+        //    CreatePolicyName = BookStorePermissions.Books.Create;
             UpdatePolicyName = BookStorePermissions.Books.Edit;
             DeletePolicyName = BookStorePermissions.Books.Delete;
         }
@@ -114,6 +114,24 @@ namespace Acme.BookStore.Books
             }
 
             return $"book.{sorting}";
+        }
+        public async Task CreateManyBooksAsync( List<CreateUpdateBookDto> bookInputs)
+        {
+
+            foreach (var bookInput in bookInputs)
+            {
+                var book = new Book
+                {
+                    Name = bookInput.Name,
+                    Type = bookInput.Type,
+                    PublishDate = bookInput.PublishDate,
+                    Price = bookInput.Price,
+                    AuthorId = bookInput.AuthorId
+                };
+
+                await Repository.InsertAsync(book);
+            }
+
         }
     }
 }
