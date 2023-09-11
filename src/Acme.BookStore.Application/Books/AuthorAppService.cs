@@ -91,31 +91,26 @@ namespace Acme.BookStore.Books
             await _authorRepository.DeleteAsync(id);
        }
 //        [Authorize(BookStorePermissions.Authors.Create)]
-        public async Task<AuthorDto> CreateAuthorWithBooksAsync(AuthorWithManyBooksDto authorWithManyBooksDto)
+        public async Task<AuthorWithManyBooksDto> CreateAuthorWithBooksAsync(AuthorWithManyBooksDto input)
         {
-            var author = await _authorManager.CreateAsync(
-                authorWithManyBooksDto.Name,
-                authorWithManyBooksDto.BirthDate,
-                authorWithManyBooksDto.ShortBio
-            );
-
-            await _authorRepository.InsertAsync(author);
-
-            foreach (var bookInput in authorWithManyBooksDto.Books)
-            {
-                var book = new Book
+        
+            Author author = await _authorManager.CreateAsync(
+                input.Name,
+                input.BirthDate,
+                input.ShortBio,
+               input.Books.Select(bookInput => new Book
                 {
                     Name = bookInput.Name,
                     Type = bookInput.Type,
                     PublishDate = bookInput.PublishDate,
-                    Price = bookInput.Price,
-                    AuthorId = author.Id
-                };
+                    Price = bookInput.Price
+                }).ToList()
+            );
+           
+            await _authorRepository.InsertAsync(author);
+            return ObjectMapper.Map<Author, AuthorWithManyBooksDto>(author);
+         
 
-                await _bookRepository.InsertAsync(book);
-            }
-
-            return ObjectMapper.Map<Author, AuthorDto>(author);
         }
     }
 }

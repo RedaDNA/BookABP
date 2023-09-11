@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.Guids;
 using Volo.Abp;
+using Acme.BookStore.Books;
 
 namespace Acme.BookStore.Authors
 {
@@ -22,7 +23,8 @@ namespace Acme.BookStore.Authors
         public async Task<Author> CreateAsync(
             [NotNull] string name,
             DateTime birthDate,
-            [CanBeNull] string shortBio = null)
+            [CanBeNull] string shortBio = null,
+         [CanBeNull] ICollection<Book> books=null)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
 
@@ -36,7 +38,8 @@ namespace Acme.BookStore.Authors
                 GuidGenerator.Create(),
                 name,
                 birthDate,
-                shortBio
+                shortBio,
+                books
             );
         }
 

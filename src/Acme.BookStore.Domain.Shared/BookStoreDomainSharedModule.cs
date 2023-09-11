@@ -1,4 +1,5 @@
 ﻿using Acme.BookStore.Localization;
+using Microsoft.FeatureManagement;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.FeatureManagement;
@@ -31,6 +32,7 @@ public class BookStoreDomainSharedModule : AbpModule
     {
         BookStoreGlobalFeatureConfigurator.Configure();
         BookStoreModuleExtensionConfigurator.Configure();
+      
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -53,6 +55,15 @@ public class BookStoreDomainSharedModule : AbpModule
         Configure<AbpExceptionLocalizationOptions>(options =>
         {
             options.MapCodeNamespace("BookStore", typeof(BookStoreResource));
+        });/*
+        Configure<FeatureManagementOptions>(options =>
+        {
+            options.Providers.Add<CustomFeatureProvider>();
         });
+        */
+
     }
+   
+    
+   
 }
