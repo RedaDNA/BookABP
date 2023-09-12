@@ -17,7 +17,7 @@ namespace Acme.BookStore
         {
             await _featureManager.SetForTenantAsync(
                 tenantId,
-                "MyApp.Reporting",
+                "MyNewApp.Reporting",
                 true.ToString()
             );
         }
