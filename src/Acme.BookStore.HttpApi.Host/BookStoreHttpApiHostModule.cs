@@ -177,6 +177,7 @@ public class BookStoreHttpApiHostModule : AbpModule
                     .AllowCredentials();
             });
         });
+
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

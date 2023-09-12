@@ -13,7 +13,8 @@ namespace Acme.BookStore
 
             myGroup.AddFeature("MyApp.PdfReporting", defaultValue: "false");
             myGroup.AddFeature("MyApp.MaxProductCount", defaultValue: "10");
-        }
-     
+        }       
+                                               
     }
-}*/
+}*/ 
+  

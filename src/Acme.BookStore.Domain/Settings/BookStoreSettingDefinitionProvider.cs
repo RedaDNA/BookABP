@@ -3,7 +3,7 @@ using Volo.Abp.Settings;
 using Volo.Abp.Localization;
 
 namespace Acme.BookStore.Settings;
-
+ 
 public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
 {
     public const int DefaultMaxBooksPerAuthor = 5;
@@ -17,8 +17,8 @@ public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
               new SettingDefinition("Smtp.UserName"),
               new SettingDefinition("Smtp.Password", isEncrypted: true),
               new SettingDefinition("Smtp.EnableSsl", "false")
-          );*/
-
+          );*/   
+            
         {
             var maxBooksPerAuthorSetting = context.GetOrNull("App.Author.MaxBooks");
             if (maxBooksPerAuthorSetting == null)
@@ -36,6 +36,7 @@ public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
             }
         }
     }
-
+    
+    
 
 }

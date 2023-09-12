@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.FeatureManagement;
 
-namespace Acme.BookStore.Features
+namespace Acme.BookStore
 {
-    public class MyService : BookStoreAppService, ITransientDependency
+    public class NewService : BookStoreAppService, ITransientDependency
     {
         private readonly IFeatureManager _featureManager;
 
-        public MyService(IFeatureManager featureManager)
+        public NewService(IFeatureManager featureManager)
         {
             _featureManager = featureManager;
         }
@@ -20,9 +17,10 @@ namespace Acme.BookStore.Features
         {
             await _featureManager.SetForTenantAsync(
                 tenantId,
-                "MyApp.PdfReporting",
+                "MyApp.Reporting",
                 true.ToString()
             );
         }
-    }
+    } 
+    
 }

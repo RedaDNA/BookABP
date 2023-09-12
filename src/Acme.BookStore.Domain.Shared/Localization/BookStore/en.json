@@ -38,6 +38,7 @@
     "Permission:Authors.Edit": "Editing the authors",
     "Permission:Authors.Delete": "Deleting the authors",
     "PdfReporting": "PDF Reporting",
-    "MaxProductCount": "Maximum number of products"
+    "MaxProductCount": "Maximum number of products",
+    "Reporting": "Reporting"
   }
 }

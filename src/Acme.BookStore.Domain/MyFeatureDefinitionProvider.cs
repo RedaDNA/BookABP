@@ -23,14 +23,7 @@ namespace Acme.BookStore
                 valueType: new ToggleStringValueType()
             );
 
-            myGroup.AddFeature(
-                "MyApp.MaxProductCount",
-                defaultValue: "10",
-                displayName: LocalizableString
-                                 .Create<LocalizationResource>("MaxProductCount"),
-                valueType: new FreeTextStringValueType(
-                               new NumericValueValidator(0, 1000000))
-            );
+          
         }
     }
 }
