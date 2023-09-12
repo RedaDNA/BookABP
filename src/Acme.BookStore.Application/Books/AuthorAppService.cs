@@ -7,27 +7,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.SettingManagement;
+using Volo.Abp.Settings;
 
 namespace Acme.BookStore.Books
 {
    //[Authorize(BookStorePermissions.Authors.Default)]
-    public class AuthorAppService : BookStoreAppService, IAuthorAppService
+    public class AuthorAppService : BookStoreAppService, IAuthorAppService, ITransientDependency
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly AuthorManager _authorManager;
         private readonly IRepository<Book, Guid> _bookRepository;
-
+        private readonly ISettingManager _settingManager;
         public AuthorAppService(
             IAuthorRepository authorRepository,
             AuthorManager authorManager,
-              IRepository<Book, Guid> bookRepository)
+              IRepository<Book, Guid> bookRepository, ISettingManager settingManager)
         {
             _authorRepository = authorRepository;
             _authorManager = authorManager;
             _bookRepository = bookRepository;
+            _settingManager = settingManager; 
         }
-
+        public void UpdateMaxBooksPerAuthor(int newLimit)
+        {
+            _settingManager.SetAsync("App.Author.MaxBooks", newLimit.ToString(),null,null);
+          
+        }
+        public async Task<int> GetMaxBooksPerAuthor()
+        {
+          var   settingMaxBooksValue=
+                await _settingManager.GetOrNullAsync("App.Author.MaxBooks", null, null);
+            if (int.TryParse(settingMaxBooksValue, out int maxBooksPerAuthor))
+            {
+                return maxBooksPerAuthor;
+            }
+            return -1;
+        }
         public async Task<AuthorDto> GetAsync(Guid id)
         {
             var author = await _authorRepository.GetAsync(id);

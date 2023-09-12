@@ -16,23 +16,13 @@ namespace Acme.BookStore.Features
         {
             _featureManager = featureManager;
         }
-
-        public async Task SetFeatureDemoAsync(Guid tenantId, string value)
+        public async Task EnablePdfReporting(Guid tenantId)
         {
-            await _featureManager
-                .SetForTenantAsync(tenantId, "Feature1", value);
-
-            var currentValue = await _featureManager
-                .GetOrNullForTenantAsync("Feature1", tenantId);
-        }
-    }
-    public class CustomFeatureProvider : FeatureManagementProvider
-    {
-        public override string Name => "Custom";
-
-        public CustomFeatureProvider(IFeatureManagementStore store)
-            : base(store)
-        {
+            await _featureManager.SetForTenantAsync(
+                tenantId,
+                "MyApp.PdfReporting",
+                true.ToString()
+            );
         }
     }
 }

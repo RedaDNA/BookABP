@@ -27,5 +27,7 @@ public class BookStoreApplicationModule : AbpModule
         {
             options.AddMaps<BookStoreApplicationModule>();
         });
+       
+
     }
 }
