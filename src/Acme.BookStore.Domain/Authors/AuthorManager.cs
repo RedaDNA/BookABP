@@ -14,7 +14,7 @@ namespace Acme.BookStore.Authors
     public class AuthorManager : DomainService
     {
         private readonly IAuthorRepository _authorRepository;
-
+        
         public AuthorManager(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
@@ -42,7 +42,8 @@ namespace Acme.BookStore.Authors
                 books
             );
         }
-
+        
+                
         public async Task ChangeNameAsync(
             [NotNull] Author author,
             [NotNull] string newName)

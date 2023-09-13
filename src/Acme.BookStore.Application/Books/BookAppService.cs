@@ -98,14 +98,16 @@ namespace Acme.BookStore.Books
             return new ListResultDto<AuthorLookupDto>(
                 ObjectMapper.Map<List<Author>, List<AuthorLookupDto>>(authors)
             );
-        }
+        }          
+
+
+         
         private static string NormalizeSorting(string sorting)
         {
             if (sorting.IsNullOrEmpty())
             {
                 return $"book.{nameof(Book.Name)}";
             }
-
             if (sorting.Contains("authorName", StringComparison.OrdinalIgnoreCase))
             {
                 return sorting.Replace(
@@ -125,15 +127,14 @@ namespace Acme.BookStore.Books
                 var book = new Book
                 {
                     Name = bookInput.Name,
-                    Type = bookInput.Type,
+                    Type = bookInput.Type,   
                     PublishDate = bookInput.PublishDate,
                     Price = bookInput.Price,
                     AuthorId = bookInput.AuthorId
                 };
-
                 await Repository.InsertAsync(book);
             }
-
+                    
         }
     }
 }

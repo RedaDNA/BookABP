@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -25,7 +26,11 @@ namespace Acme.BookStore.Authors
             var dbSet = await GetDbSetAsync();
             return await dbSet.FirstOrDefaultAsync(author => author.Name == name);
         }
-
+        public override Task<Author> InsertAsync(Author entity, bool autoSave = false, CancellationToken cancellationToken = default)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            else  return base.InsertAsync(entity, autoSave, cancellationToken);
+        }
         public async Task<List<Author>> GetListAsync(
             int skipCount,
             int maxResultCount,

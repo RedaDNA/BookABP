@@ -1,6 +1,7 @@
 ﻿using Acme.BookStore.Authors;
 using Acme.BookStore.Permissions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,32 +22,54 @@ namespace Acme.BookStore.Books
         private readonly AuthorManager _authorManager;
         private readonly IRepository<Book, Guid> _bookRepository;
         private readonly ISettingManager _settingManager;
+        private readonly IConfiguration _configuration;
+
         public AuthorAppService(
             IAuthorRepository authorRepository,
             AuthorManager authorManager,
-              IRepository<Book, Guid> bookRepository, ISettingManager settingManager)
+              IRepository<Book, Guid> bookRepository, ISettingManager settingManager, IConfiguration configuration)
         {
             _authorRepository = authorRepository;
             _authorManager = authorManager;
             _bookRepository = bookRepository;
-            _settingManager = settingManager; 
+            _settingManager = settingManager;
+            _configuration = configuration;
         }
+        
         public void UpdateMaxBooksPerAuthor(int newLimit)
         {
-            _settingManager.SetAsync("App.Author.MaxBooks", newLimit.ToString(),null,null);
-          
+            _settingManager.SetAsync("App.Author.MaxBooks", newLimit.ToString(),null,null );
+
+
         }
-        public async Task<int> GetMaxBooksPerAuthor()
+        public async Task<string> GetMaxBooksPerAuthor()
         {
-          var   settingMaxBooksValue=
-                await _settingManager.GetOrNullAsync("App.Author.MaxBooks", null, null);
-            if (int.TryParse(settingMaxBooksValue, out int maxBooksPerAuthor))
-            {
-                return maxBooksPerAuthor;
+            var appAuthorMaxBooksValue = _configuration["App.Author.MaxBooks"];
+            Console.WriteLine($"Value of 'App.Author.MaxBooks': {appAuthorMaxBooksValue}");
+            /* var   settingMaxBooksValue=
+                   await _settingManager.GetOrNullAsync("App.Author.MaxBooks", null, null);
+               if (int.TryParse(settingMaxBooksValue, out int maxBooksPerAuthor))
+               {
+                   return maxBooksPerAuthor;
+               }
+            try
+            {              var settingMaxBooksValue = await _settingManager.GetOrNullAsync("App.Author.MaxBooks", null, null);
+                if (int.TryParse(settingMaxBooksValue, out int maxBooksPerAuthor))
+                {
+                    return maxBooksPerAuthor;
+                }
+                return -1;
             }
-            return -1;
+            catch (Exception ex)
+            {
+                // Log the exception details for debugging purposes
+                Console.WriteLine(ex.ToString());
+                throw; // Rethrow the exception to propagate it further
+    }*/
+               return appAuthorMaxBooksValue;
         }
-        public async Task<AuthorDto> GetAsync(Guid id)
+
+            public async Task<AuthorDto> GetAsync(Guid id)
         {
             var author = await _authorRepository.GetAsync(id);
             return ObjectMapper.Map<Author, AuthorDto>(author);
@@ -75,6 +98,8 @@ namespace Acme.BookStore.Books
                 ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors)
             );
         }
+         
+          
   //      [Authorize(BookStorePermissions.Authors.Create)]
         public async Task<AuthorDto> CreateAsync(CreateAuthorDto input)
         {
@@ -83,7 +108,7 @@ namespace Acme.BookStore.Books
                 input.BirthDate,
                 input.ShortBio
             );
-
+            
             await _authorRepository.InsertAsync(author);
 
             return ObjectMapper.Map<Author, AuthorDto>(author);
@@ -108,6 +133,7 @@ namespace Acme.BookStore.Books
         {
             await _authorRepository.DeleteAsync(id);
        }
+        
 //        [Authorize(BookStorePermissions.Authors.Create)]
         public async Task<AuthorWithManyBooksDto> CreateAuthorWithBooksAsync(AuthorWithManyBooksDto input)
         {

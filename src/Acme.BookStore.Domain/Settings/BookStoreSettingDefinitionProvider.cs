@@ -17,7 +17,8 @@ public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
               new SettingDefinition("Smtp.UserName"),
               new SettingDefinition("Smtp.Password", isEncrypted: true),
               new SettingDefinition("Smtp.EnableSsl", "false")
-          );*/   
+          );
+        
             
         {
             var maxBooksPerAuthorSetting = context.GetOrNull("App.Author.MaxBooks");
@@ -34,9 +35,9 @@ public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
 
                 context.Add(maxBooksPerAuthorSetting);
             }
-        }
+        }*/
     }
-    
-    
+
+
 
 }

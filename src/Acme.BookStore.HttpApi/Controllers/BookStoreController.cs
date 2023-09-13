@@ -11,4 +11,5 @@ public abstract class BookStoreController : AbpControllerBase
     {
         LocalizationResource = typeof(BookStoreResource);
     }
+     
 }
